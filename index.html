@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saving Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-image: url('https://wallpapercave.com/wp/wp2716012.jpg');
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative; /* Needed for absolute positioning of the menu icon */
+        }
+
+        #savedDisplay {
+            margin: 2rem 0;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            transition: color 0.3s ease;
+        }
+
+        #savedDisplay.highlighted {
+            color: #2ecc71;
+        }
+
+        #shuffleBtn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            background: #3498db;
+            color: white;
+            margin-bottom: 1.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        #shuffleBtn:hover {
+            background-color: #2980b9;
+            transform: translateY(-0.125rem);
+            box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.15);
+        }
+
+        #shuffleBtn:active {
+            background-color: #21618c;
+            transform: translateY(0);
+            box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
+        }
+
+        .deck {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            max-width: 1000px;
+            margin-bottom: 2rem;
+        }
+
+        .card-wrapper {
+            width: 200px;
+            height: 270px;
+            perspective: 1000px;
+        }
+
+        .card-flip {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+            cursor: pointer;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+        }
+
+        .card-flip.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.75rem;
+            border: 1px solid #e0e0e0;
+            font-size: 1.2rem;
+            box-sizing: border-box;
+        }
+
+        .card-front {
+            /* Uno inspired colors */
+            background: #16a3a8; /* Blue */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Distribute content vertically */
+            align-items: center;
+            padding: 0.5rem;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.6rem; /* Adjust font size as needed */
+        }
+
+        .card-front.red {
+            background: rgb(1, 1, 2);
+        }
+
+        .card-front.green {
+            background: pink;
+        }
+
+        .card-front.yellow {
+            background: peachpuff;
+            color: #2c3e50;
+        }
+
+        .card-back {
+            background: #f5f5dc;
+            transform: rotateY(180deg);
+            padding: 1.25rem;
+            text-align: center;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .card-back strong {
+            color: #e74c3c;
+            font-size: 1.4rem;
+        }
+
+        .blurred {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+
+        #focusCardModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        #focusCardModal .card-wrapper {
+            width: 250px;
+            height: 337.5px;
+            margin-bottom: 2rem;
+            box-shadow: 0 0.75rem 2.25rem rgba(0, 0, 0, 0.25);
+        }
+
+        #focusCardModal .card-flip {
+            box-shadow: none;
+        }
+
+        #modalButtons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        #modalButtons button {
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+            width: 180px;
+            text-align: center;
+        }
+
+        #acceptBtn {
+            background: #2ecc71;
+            color: white;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+        }
+
+        #acceptBtn:hover {
+            background-color: #27ae60;
+            transform: translateY(-0.125rem);
+            box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.15);
+        }
+
+        #acceptBtn:active {
+            background-color: #1e8449;
+            transform: translateY(0);
+            box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
+        }
+
+        #drawAnotherBtn {
+            background: #e74c3c;
+            color: white;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+        }
+
+        #drawAnotherBtn:hover {
+            background-color: #c0392b;
+            transform: translateY(-0.125rem);
+            box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.15);
+        }
+
+        #drawAnotherBtn:active {
+            background-color: #a93226;
+            transform: translateY(0);
+            box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
+        }
+
+        #calendarModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        #calendarContent {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0.75rem 2.25rem rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+
+        #calendarContent h2 {
+            margin-bottom: 1.5rem;
+            color: #3498db;
+        }
+
+        #calendarGrid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-day {
+            padding: 0.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            text-align: center;
+            background: #f0f0f0;
+            color: #555;
+            min-height: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+
+        .calendar-day.header {
+            font-weight: bold;
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .calendar-day.saved {
+            background: #86ef7d;
+            color: #15803d;
+        }
+
+        .calendar-day.today {
+            border: 2px solid #e74c3c;
+        }
+
+        #closeCalendarBtn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            background: #3498db;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+            margin-top: 1rem;
+        }
+
+        #closeCalendarBtn:hover {
+            background-color: #2980b9;
+            transform: translateY(-0.125rem);
+            box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.15);
+        }
+
+        #closeCalendarBtn:active {
+            background-color: #21618c;
+            transform: translateY(0);
+            box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .deck {
+                gap: 1rem;
+            }
+
+            .card-wrapper {
+                width: 180px;
+                height: 243px;
+            }
+
+            .card-front,
+            .card-back {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+
+            #focusCardModal .card-wrapper {
+                width: 90%;
+                max-width: 300px;
+                height: auto;
+            }
+            #calendarGrid {
+                gap: 0.25rem;
+            }
+            .calendar-day{
+                font-size: 0.7rem;
+                padding: 0.25rem;
+                min-height: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-back {
+                font-size: 0.9rem;
+                padding: 0.75rem;
+            }
+            .calendar-day{
+                font-size: 0.6rem;
+                padding: 0.1rem;
+                min-height: 1.2rem;
+            }
+        }
+        .card-front-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          width: 100%;
+        }
+        .card-index{
+            font-size: 1.3rem;
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Keyframes for shuffling animation */
+        @keyframes shuffle {
+          0% { transform: rotate(0deg); }
+          25% { transform: rotate(10deg); }
+          50% { transform: rotate(-10deg); }
+          75% { transform: rotate(5deg); }
+          100% { transform: rotate(0deg); }
+        }
+
+        .shuffle-animation {
+          animation: shuffle 0.5s ease-in-out; /* Apply the animation */
+        }
+
+        /* Styles for the floating menu icon and sidebar */
+        #menuIcon {
+            position: fixed; /* Fix the icon to the side of the screen */
+            top: 2rem;      /* Adjust top spacing as needed */
+            right: 1rem;    /* Adjust right spacing as needed */
+            cursor: pointer;
+            z-index: 1001; /* Ensure the icon is above other elements */
+            background-color: #3498db; /* Blue background, same as shuffle button */
+            color: white;
+            border-radius: 50%; /* Make it a circle */
+            width: 3rem;    /* Increased size for better visibility */
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1); /* Add shadow */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+        }
+
+        #menuIcon:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+            transform: scale(1.1); /* Slightly larger on hover */
+            box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.15);
+        }
+
+        #menuIcon:active {
+            background-color: #21618c; /* Even darker blue on active */
+            transform: scale(0.9);
+            box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 350px;
+            background-color: #ecf0f1;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1002;
+            padding: 2rem;
+            box-shadow: -0.25rem 0 0.75rem rgba(0, 0, 0, 0.1);
+            display: flex;   
+            flex-direction: column;
+            box-sizing: border-box;
+            align-items: center;
+        }
+
+        #sidebar.open {
+            transform: translateX(0); /* Slide in when open class is added */
+        }
+
+        #sidebarClose {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #7f8c8d; /* Darker grey color */
+            transition: color 0.2s ease;
+            padding: 0.5rem; /* Add padding for better touch area */
+        }
+
+        #sidebarClose:hover {
+            color: #34495e; /* Even darker grey on hover */
+        }
+
+        #sidebar h2 {
+            margin-bottom: 1.5rem;
+            color: #3498db;
+            font-size: 1.5rem; /* Larger heading */
+        }
+
+        #goalDisplay {
+            margin-bottom: 1rem;
+            font-size: 1.2rem; /* Increased font size */
+            color: #2c3e50;
+            width: 100%; /* Full width within the sidebar */
+            display: flex;
+            justify-content: space-between; /* Space between label and value */
+            align-items: center; /* Vertically center items */
+        }
+
+        #editGoalBtn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 0.375rem;
+            border: 1px solid #3498db; /* Blue border */
+            cursor: pointer;
+            background: transparent;
+            color: #3498db;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-left: 0.5rem; /* Add some spacing */
+        }
+
+        #editGoalBtn:hover {
+            background-color: #3498db; /* Blue background on hover */
+            color: white; /* White text on hover */
+        }
+
+        #editGoalBtn:active {
+            background-color: #2980b9; /* Darker blue on active */
+            border-color: #2980b9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 1rem;
+            background-color: #bdc3c7; /* Light grey background */
+            border-radius: 0.5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+            overflow: hidden; /* Ensure progress doesn't overflow rounded corners */
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #2ecc71; /* Green fill */
+            border-radius: 0.5rem;
+            width: 0; /* Start with 0% width */
+            transition: width 0.3s ease; /* Smooth width transition */
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: #555;
+            text-align: center;
+            margin-top: 0.25rem;
+        }
+        .hidden {
+            display: none;
+        }
+        .input-goal{
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #e0e0e0;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+        }
+        .save-goal-btn{
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            background: #2ecc71;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: center;
+        }
+        .save-goal-btn:hover {
+            background-color: #27ae60;
+            transform: translateY(-0.125rem);
+            box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.15);
+        }
+
+        .save-goal-btn:active {
+            background-color: #1e8449;
+            transform: translateY(0);
+            box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
+        }
+        
+    </style>
+</head>
+<body>
+    <h1 style="font-family: 'Press Start 2P', cursive; font-size: 1.5em; font-weight: bold; padding: 100px 5px;">Ipon Challenge</h1>
+    <button id="shuffleBtn">Shuffle Challenges</button>
+    <div class="deck" id="cardDeck"></div>
+    <button id="viewCalendarBtn">View Savings Calendar</button>
+
+    <div id="menuIcon">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div id="sidebar">
+        <div id="sidebarClose">
+            <i class="fas fa-times"></i>
+        </div>
+        <h2>My Progress</h2>
+        <div id="goalDisplay">
+            <span>Goal: ₱<span id="goalAmount">1000</span></span>
+            <button id="editGoalBtn">Edit</button>
+        </div>
+        <input type="number" id="inputGoal" class="input-goal hidden" placeholder="Enter your goal">
+        <button class="save-goal-btn hidden" id="saveGoalBtn">Save Goal</button>
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0%</div>
+        <div id="savedDisplay">Total Saved: ₱<span id="saved">0</span></div>
+    </div>
+
+    <div id="focusCardModal">
+        <div>
+            <div class="card-wrapper">
+                <div class="card-flip flipped" id="focusCard">
+                    <div class="card-front">Card</div>
+                    <div class="card-back" id="focusCardText"></div>
+                </div>
+            </div>
+            <div id="modalButtons">
+                <button id="acceptBtn">Accept Challenge</button>
+                <button id="drawAnotherBtn">Draw Another</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="calendarModal">
+        <div id="calendarContent">
+            <h2>Savings Calendar</h2>
+            <div id="calendarGrid"></div>
+            <button id="closeCalendarBtn">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const challenges = [
+            "Save ₱20 by skipping your milk tea today.",
+            "Walk instead of taking a tricycle. Save ₱15.",
+            "Skip the chips. Save ₱30.",
+            "Make your own coffee. Save ₱50.",
+            "Declutter and sell one item. Save ₱100.",
+            "Cook instead of eating out. Save ₱80.",
+            "Unsubscribe from a monthly app you don’t use. Save ₱149.",
+            "No online shopping today! Save ₱200.",
+            "Use a reusable bottle. Save ₱25.",
+            "No-load day. Save ₱50.",
+            "Buy generic instead of brand name. Save ₱40",
+            "Bring your own lunch to work/school. Save ₱60",
+            "Carpool or share a ride. Save ₱75",
+            "Wait for a sale before buying non-essential items. Save ₱90",
+            "Repair instead of replacing broken items. Save ₱120",
+            "Use public transportation instead of a taxi. Save ₱65",
+            "Brew your own iced tea. Save ₱20",
+            "Unplug unused electronics. Save ₱10",
+            "Use cashback rewards for purchases. Save ₱35",
+            "Avoid ATM fees by using your bank's ATM. Save ₱20",
+            "Shop at a local farmer's market. Save ₱25",
+            "Take advantage of free events in your city. Save ₱50",
+            "Cancel unused subscriptions (streaming, gym). Save ₱100",
+            "Use coupons or discount codes. Save ₱30",
+            "Buy in bulk (non-perishable items). Save ₱80",
+            "Lower your thermostat by a degree. Save ₱15",
+            "Air dry your clothes instead of using the dryer. Save ₱40",
+            "Refinance debt to a lower interest rate. Save ₱Variable",
+            "Pack snacks when traveling to avoid impulse buys. Save ₱25",
+            "Negotiate bills (cable, internet). Save ₱Variable",
+            "Use energy-efficient light bulbs. Save ₱10",
+            "Collect your spare change daily. Save ₱5-₱20",
+            "Don't buy coffee out this week. Save ₱35",
+            "Walk or bike for short errands. Save ₱15",
+            "Skip dessert when eating out. Save ₱40",
+            "Use library resources instead of buying books. Save ₱50",
+            "Take shorter showers. Save ₱20",
+            "Avoid impulse purchases at checkout lines. Save ₱25",
+            "Make a shopping list and stick to it. Save ₱30",
+            "Compare prices before making a purchase. Save ₱Variable",
+            "Use a water filter instead of buying bottled water. Save ₱30",
+            "Turn off lights when leaving a room. Save ₱5",
+            "Pay bills on time to avoid late fees. Save ₱Variable",
+            "Opt for free entertainment (board games, hiking). Save ₱50",
+            "Potluck with friends instead of eating at a restaurant. Save ₱60",
+            "DIY gifts instead of buying them. Save ₱40",
+            "Sell items you no longer use online. Save ₱Variable",
+            "Limit your alcohol consumption. Save ₱50",
+            "Quit smoking. Save ₱Variable",
+            "Meal plan for the week to avoid food waste. Save ₱40",
+            "Freeze leftovers to eat later. Save ₱20",
+        ];
+
+        const savedKey = 'totalSaved';
+        const calendarKey = 'calendarSavings';
+        const goalKey = 'savingsGoal';
+
+        function extractAmount(text) {
+            const match = text.match(/₱(\d+)/);
+            return match ? parseInt(match[1]) : 0;
+        }
+
+        function getRandomChallenges(count = 8) {
+            const shuffled = [...challenges].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, count);
+        }
+
+        let currentChallenges = getRandomChallenges();
+        let totalSaved = parseInt(localStorage.getItem(savedKey) || '0');
+        let savingsGoal = parseInt(localStorage.getItem(goalKey) || '1000');
+
+        function getCardColor(index) {
+            const colors = ['blue', 'red', 'green', 'yellow'];
+            return colors[index % colors.length];
+        }
+
+        function renderCards() {
+            const deck = document.getElementById('cardDeck');
+            deck.innerHTML = '';
+            currentChallenges.forEach((challenge, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'card-wrapper';
+
+                const card = document.createElement('div');
+                card.className = 'card-flip';
+
+                const front = document.createElement('div');
+                front.className = `card-front ${getCardColor(index)}`;
+                front.innerHTML = `<div class="card-front-content">
+                                        <div style="font-size: 1.6rem; color: white;">IPON</div>
+                                    </div>`;
+                const back = document.createElement('div');
+                back.className = 'card-back';
+                const amount = extractAmount(challenge);
+                back.innerHTML = `${challenge}<br><strong style="font-size: 1.6rem;">₱${amount}</strong>`;
+
+                card.appendChild(front);
+                card.appendChild(back);
+
+                // Add the animation class
+                card.classList.add('shuffle-animation');
+                card.style.animationDelay = `${index * 100}ms`; // Stagger the animation
+
+                card.onclick = () => {
+                    showFocusCard(challenge);
+                };
+
+                wrapper.appendChild(card);
+                deck.appendChild(wrapper);
+            });
+             // Show the shuffle button after the initial cards are rendered
+            const shuffleBtn = document.getElementById('shuffleBtn');
+            shuffleBtn.style.display = 'block';
+        }
+
+        function showFocusCard(challengeText) {
+            document.getElementById('focusCardText').innerText = challengeText;
+            document.getElementById('focusCardModal').style.display = 'flex';
+            document.getElementById('cardDeck').classList.add('blurred');
+
+            const acceptBtn = document.getElementById('acceptBtn');
+            const drawAnotherBtn = document.getElementById('drawAnotherBtn');
+
+            acceptBtn.onclick = () => {
+                const amount = extractAmount(challengeText);
+                let currentSaved = parseInt(localStorage.getItem(savedKey) || '0');
+                currentSaved += amount;
+                localStorage.setItem(savedKey, currentSaved);
+                totalSaved = currentSaved;
+                document.getElementById('saved').innerText = currentSaved;
+                document.getElementById('saved').classList.add('highlighted');
+                setTimeout(() => {
+                    document.getElementById('saved').classList.remove('highlighted');
+                }, 500);
+
+                const today = new Date().toISOString().split('T')[0];
+                const calendar = JSON.parse(localStorage.getItem(calendarKey) || '{}');
+                calendar[today] = amount;
+                localStorage.setItem(calendarKey, JSON.stringify(calendar));
+                document.getElementById('focusCardModal').style.display = 'none';
+                document.getElementById('cardDeck').classList.remove('blurred');
+                renderCards();
+                updateProgress();
+            };
+
+            drawAnotherBtn.onclick = () => {
+                currentChallenges = getRandomChallenges();
+                renderCards();
+                document.getElementById('focusCardModal').style.display = 'none';
+                document.getElementById('cardDeck').classList.remove('blurred');
+            };
+        }
+
+        document.getElementById('shuffleBtn').addEventListener('click', () => {
+            currentChallenges = getRandomChallenges();
+            renderCards();
+        });
+
+        window.onload = () => {
+            currentChallenges = getRandomChallenges();
+            renderCards();
+            document.getElementById('saved').innerText = totalSaved;
+            document.getElementById('goalAmount').innerText = savingsGoal;
+            updateProgress();
+        };
+
+        // Calendar functionality
+        document.getElementById('viewCalendarBtn').addEventListener('click', () => {
+            displayCalendar();
+            document.getElementById('calendarModal').style.display = 'flex';
+        });
+
+        document.getElementById('closeCalendarBtn').addEventListener('click', () => {
+            document.getElementById('calendarModal').style.display = 'none';
+        });
+
+        function displayCalendar() {
+            const calendarData = JSON.parse(localStorage.getItem(calendarKey) || '{}');
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayNames.forEach(dayName => {
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day header';
+                dayCell.innerText = dayName;
+                calendarGrid.appendChild(dayCell);
+            });
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement('div');
+                calendarGrid.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day';
+                if (calendarData[dateString]) {
+                    dayCell.classList.add('saved');
+                    dayCell.innerText = `${day}\n₱${calendarData[dateString]}`;
+                } else {
+                    dayCell.innerText = day;
+                }
+
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    dayCell.classList.add('today');
+                }
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+
+        // Get references to the menu icon and sidebar
+        const menuIcon = document.getElementById('menuIcon');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarClose = document.getElementById('sidebarClose');
+
+        // Function to toggle the sidebar
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+        }
+
+        // Event listener for the menu icon to open the sidebar
+        menuIcon.addEventListener('click', toggleSidebar);
+
+        // Event listener for the close button to close the sidebar
+        sidebarClose.addEventListener('click', toggleSidebar);
+
+        // --- Progress Bar and Goal Logic ---
+        const goalAmountDisplay = document.getElementById('goalAmount');
+        const progressBarFill = document.getElementById('progressBarFill');
+        const progressText = document.getElementById('progressText');
+        const editGoalBtn = document.getElementById('editGoalBtn');
+        const inputGoalElement = document.getElementById('inputGoal');
+        const saveGoalBtn = document.getElementById('saveGoalBtn');
+
+        let currentGoal = parseInt(localStorage.getItem(goalKey) || '1000');
+        goalAmountDisplay.textContent = currentGoal;
+
+        function updateProgress() {
+            const progress = (totalSaved / currentGoal) * 100;
+            progressBarFill.style.width = `${progress}%`;
+            progressText.textContent = `${progress.toFixed(1)}%`;
+        }
+
+        editGoalBtn.addEventListener('click', () => {
+            inputGoalElement.classList.remove('hidden');
+            saveGoalBtn.classList.remove('hidden');
+            editGoalBtn.classList.add('hidden');
+        });
+
+        saveGoalBtn.addEventListener('click', () => {
+            const newGoal = parseInt(inputGoalElement.value);
+            if (!isNaN(newGoal) && newGoal > 0) {
+                currentGoal = newGoal;
+                localStorage.setItem(goalKey, newGoal);
+                goalAmountDisplay.textContent = newGoal;
+                updateProgress();
+
+                inputGoalElement.classList.add('hidden');
+                saveGoalBtn.classList.add('hidden');
+                editGoalBtn.classList.remove('hidden');
+            } else {
+                alert('Please enter a valid goal amount.');
+            }
+            inputGoalElement.value = '';
+        });
+    </script>
+</body>
+</html>
