@@ -446,69 +446,69 @@
             left: 1rem;
             cursor: pointer;
             font-size: 1.5rem;
-            color: #7f8c8d; /* Darker grey color */
+            color: #7f8c8d; 
             transition: color 0.2s ease;
-            padding: 0.5rem; /* Add padding for better touch area */
+            padding: 0.5rem; 
         }
 
         #sidebarClose:hover {
-            color: #34495e; /* Even darker grey on hover */
+            color: #34495e; 
         }
 
         #sidebar h2 {
             margin-bottom: 1.5rem;
             color: #3498db;
-            font-size: 1.5rem; /* Larger heading */
+            font-size: 1.5rem; 
         }
 
         #goalDisplay {
             margin-bottom: 1rem;
-            font-size: 1.2rem; /* Increased font size */
+            font-size: 1.2rem; 
             color: #2c3e50;
-            width: 100%; /* Full width within the sidebar */
+            width: 100%; 
             display: flex;
-            justify-content: space-between; /* Space between label and value */
-            align-items: center; /* Vertically center items */
+            justify-content: space-between; 
+            align-items: center; 
         }
 
         #editGoalBtn {
             padding: 0.5rem 1rem;
             font-size: 0.9rem;
             border-radius: 0.375rem;
-            border: 1px solid #3498db; /* Blue border */
+            border: 1px solid #3498db; 
             cursor: pointer;
             background: transparent;
             color: #3498db;
             transition: background-color 0.3s ease, color 0.3s ease;
-            margin-left: 0.5rem; /* Add some spacing */
+            margin-left: 0.5rem; 
         }
 
         #editGoalBtn:hover {
-            background-color: #3498db; /* Blue background on hover */
-            color: white; /* White text on hover */
+            background-color: #3498db; 
+            color: white; 
         }
 
         #editGoalBtn:active {
-            background-color: #2980b9; /* Darker blue on active */
+            background-color: #2980b9; 
             border-color: #2980b9;
         }
 
         .progress-bar {
             width: 100%;
             height: 1rem;
-            background-color: #bdc3c7; /* Light grey background */
+            background-color: #bdc3c7;
             border-radius: 0.5rem;
             position: relative;
             margin-bottom: 0.5rem;
-            overflow: hidden; /* Ensure progress doesn't overflow rounded corners */
+            overflow: hidden; 
         }
 
         .progress-bar-fill {
             height: 100%;
-            background-color: #2ecc71; /* Green fill */
+            background-color: #2ecc71; 
             border-radius: 0.5rem;
-            width: 0; /* Start with 0% width */
-            transition: width 0.3s ease; /* Smooth width transition */
+            width: 0; 
+            transition: width 0.3s ease;
         }
 
         .progress-text {
@@ -708,9 +708,9 @@
                 card.appendChild(front);
                 card.appendChild(back);
 
-                // Add the animation class
+               
                 card.classList.add('shuffle-animation');
-                card.style.animationDelay = `${index * 100}ms`; // Stagger the animation
+                card.style.animationDelay = `${index * 100}ms`; 
 
                 card.onclick = () => {
                     showFocusCard(challenge);
@@ -719,7 +719,7 @@
                 wrapper.appendChild(card);
                 deck.appendChild(wrapper);
             });
-             // Show the shuffle button after the initial cards are rendered
+            
             const shuffleBtn = document.getElementById('shuffleBtn');
             shuffleBtn.style.display = 'block';
         }
@@ -775,7 +775,7 @@
             updateProgress();
         };
 
-        // Calendar functionality
+        // Calendar 
         document.getElementById('viewCalendarBtn').addEventListener('click', () => {
             displayCalendar();
             document.getElementById('calendarModal').style.display = 'flex';
@@ -827,23 +827,22 @@
             }
         }
 
-        // Get references to the menu icon and sidebar
+       
         const menuIcon = document.getElementById('menuIcon');
         const sidebar = document.getElementById('sidebar');
         const sidebarClose = document.getElementById('sidebarClose');
 
-        // Function to toggle the sidebar
+        // Sidebar
         function toggleSidebar() {
             sidebar.classList.toggle('open');
         }
 
-        // Event listener for the menu icon to open the sidebar
+    
         menuIcon.addEventListener('click', toggleSidebar);
 
-        // Event listener for the close button to close the sidebar
         sidebarClose.addEventListener('click', toggleSidebar);
 
-        // --- Progress Bar and Goal Logic ---
+        // --- Progress Bar and Goal ---
         const goalAmountDisplay = document.getElementById('goalAmount');
         const progressBarFill = document.getElementById('progressBarFill');
         const progressText = document.getElementById('progressText');
