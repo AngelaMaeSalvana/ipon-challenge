@@ -16,7 +16,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative; /* Needed for absolute positioning of the menu icon */
+            position: relative; 
         }
 
         #savedDisplay {
@@ -102,16 +102,15 @@
         }
 
         .card-front {
-            /* Uno inspired colors */
-            background: #16a3a8; /* Blue */
+            background: #16a3a8;
             color: white;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Distribute content vertically */
+            justify-content: space-between; 
             align-items: center;
             padding: 0.5rem;
             font-family: 'Press Start 2P', cursive;
-            font-size: 1.6rem; /* Adjust font size as needed */
+            font-size: 1.6rem; 
         }
 
         .card-front.red {
@@ -375,7 +374,7 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Keyframes for shuffling animation */
+      
         @keyframes shuffle {
           0% { transform: rotate(0deg); }
           25% { transform: rotate(10deg); }
@@ -385,36 +384,36 @@
         }
 
         .shuffle-animation {
-          animation: shuffle 0.5s ease-in-out; /* Apply the animation */
+          animation: shuffle 0.5s ease-in-out; 
         }
 
-        /* Styles for the floating menu icon and sidebar */
+        
         #menuIcon {
-            position: fixed; /* Fix the icon to the side of the screen */
-            top: 2rem;      /* Adjust top spacing as needed */
-            right: 1rem;    /* Adjust right spacing as needed */
+            position: fixed; 
+            top: 2rem;      
+            right: 1rem;    
             cursor: pointer;
-            z-index: 1001; /* Ensure the icon is above other elements */
-            background-color: #3498db; /* Blue background, same as shuffle button */
+            z-index: 1001;
+            background-color: #3498db; 
             color: white;
-            border-radius: 50%; /* Make it a circle */
-            width: 3rem;    /* Increased size for better visibility */
+            border-radius: 50%;
+            width: 3rem;   
             height: 3rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1); /* Add shadow */
-            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1); 
+            transition: background-color 0.3s ease, transform 0.2s ease; 
         }
 
         #menuIcon:hover {
-            background-color: #2980b9; /* Darker blue on hover */
-            transform: scale(1.1); /* Slightly larger on hover */
+            background-color: #2980b9; 
+            transform: scale(1.1); 
             box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.15);
         }
 
         #menuIcon:active {
-            background-color: #21618c; /* Even darker blue on active */
+            background-color: #21618c; 
             transform: scale(0.9);
             box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
         }
@@ -438,7 +437,7 @@
         }
 
         #sidebar.open {
-            transform: translateX(0); /* Slide in when open class is added */
+            transform: translateX(0); 
         }
 
         #sidebarClose {
