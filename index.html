@@ -11,12 +11,12 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Press Start 2P cuArsive';
             background-image: url('https://wallpapercave.com/wp/wp2716012.jpg');
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative; 
+            position: relative;
         }
 
         #savedDisplay {
@@ -106,11 +106,10 @@
             color: white;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; 
+            justify-content: space-between;
             align-items: center;
-            padding: 0.5rem;
             font-family: 'Press Start 2P', cursive;
-            font-size: 1.6rem; 
+            border: 10px solid white;
         }
 
         .card-front.red {
@@ -354,19 +353,19 @@
                 font-size: 0.9rem;
                 padding: 0.75rem;
             }
-            .calendar-day{
+             .calendar-day{
                 font-size: 0.6rem;
                 padding: 0.1rem;
                 min-height: 1.2rem;
             }
         }
         .card-front-content {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
         }
         .card-index{
             font-size: 1.3rem;
@@ -374,46 +373,44 @@
             margin-bottom: 0.5rem;
         }
 
-      
         @keyframes shuffle {
-          0% { transform: rotate(0deg); }
-          25% { transform: rotate(10deg); }
-          50% { transform: rotate(-10deg); }
-          75% { transform: rotate(5deg); }
-          100% { transform: rotate(0deg); }
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+            75% { transform: rotate(5deg); }
+            100% { transform: rotate(0deg); }
         }
 
         .shuffle-animation {
-          animation: shuffle 0.5s ease-in-out; 
+          animation: shuffle 0.5s ease-in-out;
         }
-
         
         #menuIcon {
-            position: fixed; 
-            top: 2rem;      
-            right: 1rem;    
+            position: fixed;
+            top: 2rem;
+            right: 1rem;
             cursor: pointer;
             z-index: 1001;
-            background-color: #3498db; 
+            background-color: #3498db;
             color: white;
             border-radius: 50%;
-            width: 3rem;   
+            width: 3rem;
             height: 3rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1); 
-            transition: background-color 0.3s ease, transform 0.2s ease; 
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         #menuIcon:hover {
-            background-color: #2980b9; 
-            transform: scale(1.1); 
+            background-color: #2980b9;
+            transform: scale(1.1);
             box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.15);
         }
 
         #menuIcon:active {
-            background-color: #21618c; 
+            background-color: #21618c;
             transform: scale(0.9);
             box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
         }
@@ -430,14 +427,14 @@
             z-index: 1002;
             padding: 2rem;
             box-shadow: -0.25rem 0 0.75rem rgba(0, 0, 0, 0.1);
-            display: flex;   
+            display: flex;
             flex-direction: column;
             box-sizing: border-box;
             align-items: center;
         }
 
         #sidebar.open {
-            transform: translateX(0); 
+            transform: translateX(0);
         }
 
         #sidebarClose {
@@ -446,50 +443,50 @@
             left: 1rem;
             cursor: pointer;
             font-size: 1.5rem;
-            color: #7f8c8d; 
+            color: #7f8c8d;
             transition: color 0.2s ease;
-            padding: 0.5rem; 
+            padding: 0.5rem;
         }
 
         #sidebarClose:hover {
-            color: #34495e; 
+            color: #34495e;
         }
 
         #sidebar h2 {
             margin-bottom: 1.5rem;
             color: #3498db;
-            font-size: 1.5rem; 
+            font-size: 1.5rem;
         }
 
         #goalDisplay {
             margin-bottom: 1rem;
-            font-size: 1.2rem; 
+            font-size: 1.2rem;
             color: #2c3e50;
-            width: 100%; 
+            width: 100%;
             display: flex;
-            justify-content: space-between; 
-            align-items: center; 
+            justify-content: space-between;
+            align-items: center;
         }
 
         #editGoalBtn {
             padding: 0.5rem 1rem;
             font-size: 0.9rem;
             border-radius: 0.375rem;
-            border: 1px solid #3498db; 
+            border: 1px solid #3498db;
             cursor: pointer;
             background: transparent;
             color: #3498db;
             transition: background-color 0.3s ease, color 0.3s ease;
-            margin-left: 0.5rem; 
+            margin-left: 0.5rem;
         }
 
         #editGoalBtn:hover {
-            background-color: #3498db; 
-            color: white; 
+            background-color: #3498db;
+            color: white;
         }
 
         #editGoalBtn:active {
-            background-color: #2980b9; 
+            background-color: #2980b9;
             border-color: #2980b9;
         }
 
@@ -500,14 +497,14 @@
             border-radius: 0.5rem;
             position: relative;
             margin-bottom: 0.5rem;
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         .progress-bar-fill {
             height: 100%;
-            background-color: #2ecc71; 
+            background-color: #2ecc71;
             border-radius: 0.5rem;
-            width: 0; 
+            width: 0;
             transition: width 0.3s ease;
         }
 
@@ -553,7 +550,12 @@
             transform: translateY(0);
             box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
         }
-        
+        #drawCountDisplay {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
     </style>
 </head>
 <body>
@@ -582,6 +584,7 @@
         </div>
         <div class="progress-text" id="progressText">0%</div>
         <div id="savedDisplay">Total Saved: ₱<span id="saved">0</span></div>
+        <div id="drawCountDisplay">Draws Left Today: <span id="drawCount">3</span></div>
     </div>
 
     <div id="focusCardModal">
@@ -635,10 +638,10 @@
             "Use coupons or discount codes. Save ₱30",
             "Buy in bulk (non-perishable items). Save ₱80",
             "Lower your thermostat by a degree. Save ₱15",
-            "Air dry your clothes instead of using the dryer. Save ₱40",
-            "Refinance debt to a lower interest rate. Save ₱Variable",
+            "Air dry your clothes instead of using the dryer.Save ₱40",
+            "Refinance debt to a lower interest rate. Save ₱35",
             "Pack snacks when traveling to avoid impulse buys. Save ₱25",
-            "Negotiate bills (cable, internet). Save ₱Variable",
+            "Negotiate bills (cable, internet). Save ₱100",
             "Use energy-efficient light bulbs. Save ₱10",
             "Collect your spare change daily. Save ₱5-₱20",
             "Don't buy coffee out this week. Save ₱35",
@@ -648,16 +651,16 @@
             "Take shorter showers. Save ₱20",
             "Avoid impulse purchases at checkout lines. Save ₱25",
             "Make a shopping list and stick to it. Save ₱30",
-            "Compare prices before making a purchase. Save ₱Variable",
+            "Compare prices before making a purchase. Save ₱75",
             "Use a water filter instead of buying bottled water. Save ₱30",
             "Turn off lights when leaving a room. Save ₱5",
-            "Pay bills on time to avoid late fees. Save ₱Variable",
+            "Pay bills on time to avoid late fees. Save ₱25",
             "Opt for free entertainment (board games, hiking). Save ₱50",
             "Potluck with friends instead of eating at a restaurant. Save ₱60",
             "DIY gifts instead of buying them. Save ₱40",
-            "Sell items you no longer use online. Save ₱Variable",
+            "Sell items you no longer use online. Save ₱140",
             "Limit your alcohol consumption. Save ₱50",
-            "Quit smoking. Save ₱Variable",
+            "Quit vices. Save ₱39",
             "Meal plan for the week to avoid food waste. Save ₱40",
             "Freeze leftovers to eat later. Save ₱20",
         ];
@@ -665,6 +668,7 @@
         const savedKey = 'totalSaved';
         const calendarKey = 'calendarSavings';
         const goalKey = 'savingsGoal';
+        const drawCountKey = 'drawCount';
 
         function extractAmount(text) {
             const match = text.match(/₱(\d+)/);
@@ -679,6 +683,7 @@
         let currentChallenges = getRandomChallenges();
         let totalSaved = parseInt(localStorage.getItem(savedKey) || '0');
         let savingsGoal = parseInt(localStorage.getItem(goalKey) || '1000');
+        let drawCount = parseInt(localStorage.getItem(drawCountKey) || '3');
 
         function getCardColor(index) {
             const colors = ['blue', 'red', 'green', 'yellow'];
@@ -708,23 +713,30 @@
                 card.appendChild(front);
                 card.appendChild(back);
 
-               
+                
                 card.classList.add('shuffle-animation');
-                card.style.animationDelay = `${index * 100}ms`; 
+                card.style.animationDelay = `${index * 100}ms`;
 
                 card.onclick = () => {
-                    showFocusCard(challenge);
+                    if (drawCount > 0) {
+                        showFocusCard(challenge);
+                    }
+                    
                 };
 
                 wrapper.appendChild(card);
                 deck.appendChild(wrapper);
             });
-            
             const shuffleBtn = document.getElementById('shuffleBtn');
             shuffleBtn.style.display = 'block';
+            updateDrawCountDisplay();
         }
 
         function showFocusCard(challengeText) {
+            if(drawCount <= 0){
+                alert("You have reached your daily limit. Please try again tomorrow.");
+                return;
+            }
             document.getElementById('focusCardText').innerText = challengeText;
             document.getElementById('focusCardModal').style.display = 'flex';
             document.getElementById('cardDeck').classList.add('blurred');
@@ -752,13 +764,29 @@
                 document.getElementById('cardDeck').classList.remove('blurred');
                 renderCards();
                 updateProgress();
+                decrementDrawCount();
+                
             };
 
             drawAnotherBtn.onclick = () => {
-                currentChallenges = getRandomChallenges();
-                renderCards();
-                document.getElementById('focusCardModal').style.display = 'none';
-                document.getElementById('cardDeck').classList.remove('blurred');
+                if (drawCount > 1) {
+                    currentChallenges = getRandomChallenges();
+                    renderCards();
+                    document.getElementById('focusCardModal').style.display = 'none';
+                    document.getElementById('cardDeck').classList.remove('blurred');
+                    decrementDrawCount();
+                } else if (drawCount === 1) {
+                    currentChallenges = getRandomChallenges();
+                    renderCards();
+                    document.getElementById('focusCardModal').style.display = 'none';
+                    document.getElementById('cardDeck').classList.remove('blurred');
+                    decrementDrawCount();
+                    alert("This is your last draw for today!");
+                } else {
+                    alert("You have reached your daily limit. Please try again tomorrow.");
+                    document.getElementById('focusCardModal').style.display = 'none';
+                    document.getElementById('cardDeck').classList.remove('blurred');
+                }
             };
         }
 
@@ -768,14 +796,23 @@
         });
 
         window.onload = () => {
+            let today = new Date().toISOString().split('T')[0];
+            if (!localStorage.getItem('lastDrawDate') || localStorage.getItem('lastDrawDate') != today) {
+                localStorage.setItem(drawCountKey, '3');
+                localStorage.setItem('lastDrawDate', today);
+                drawCount = 3;
+            } else {
+                drawCount = parseInt(localStorage.getItem(drawCountKey) || '3');
+            }
             currentChallenges = getRandomChallenges();
             renderCards();
             document.getElementById('saved').innerText = totalSaved;
             document.getElementById('goalAmount').innerText = savingsGoal;
             updateProgress();
+            updateDrawCountDisplay();
         };
 
-        // Calendar 
+        // Calendar
         document.getElementById('viewCalendarBtn').addEventListener('click', () => {
             displayCalendar();
             document.getElementById('calendarModal').style.display = 'flex';
@@ -827,7 +864,7 @@
             }
         }
 
-       
+        
         const menuIcon = document.getElementById('menuIcon');
         const sidebar = document.getElementById('sidebar');
         const sidebarClose = document.getElementById('sidebarClose');
@@ -849,7 +886,7 @@
         const editGoalBtn = document.getElementById('editGoalBtn');
         const inputGoalElement = document.getElementById('inputGoal');
         const saveGoalBtn = document.getElementById('saveGoalBtn');
-
+        const drawCountDisplayElement = document.getElementById('drawCount');
         let currentGoal = parseInt(localStorage.getItem(goalKey) || '1000');
         goalAmountDisplay.textContent = currentGoal;
 
@@ -857,6 +894,18 @@
             const progress = (totalSaved / currentGoal) * 100;
             progressBarFill.style.width = `${progress}%`;
             progressText.textContent = `${progress.toFixed(1)}%`;
+        }
+
+        function updateDrawCountDisplay() {
+            drawCountDisplayElement.textContent = drawCount;
+        }
+
+        function decrementDrawCount() {
+            if (drawCount > 0) {
+                drawCount--;
+                localStorage.setItem(drawCountKey, drawCount.toString());
+                updateDrawCountDisplay();
+            }
         }
 
         editGoalBtn.addEventListener('click', () => {
