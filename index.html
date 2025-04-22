@@ -18,18 +18,15 @@
             align-items: center;
             position: relative;
         }
-
         #savedDisplay {
             margin: 2rem 0;
             font-size: 1.5rem;
             color: #2c3e50;
             transition: color 0.3s ease;
         }
-
         #savedDisplay.highlighted {
             color: #2ecc71;
         }
-
         #shuffleBtn {
             padding: 0.75rem 1.5rem;
             font-size: 1.1rem;
@@ -43,7 +40,6 @@
             box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
             display: none;
         }
-
         #shuffleBtn:hover {
             background-color: #2980b9;
             transform: translateY(-0.125rem);
@@ -55,7 +51,6 @@
             transform: translateY(0);
             box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.2);
         }
-
         .deck {
             display: flex;
             flex-wrap: wrap;
@@ -64,13 +59,11 @@
             max-width: 1000px;
             margin-bottom: 2rem;
         }
-
         .card-wrapper {
             width: 200px;
             height: 270px;
             perspective: 1000px;
         }
-
         .card-flip {
             width: 100%;
             height: 100%;
@@ -81,11 +74,9 @@
             border-radius: 0.75rem;
             box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
         }
-
         .card-flip.flipped {
             transform: rotateY(180deg);
         }
-
         .card-front,
         .card-back {
             width: 100%;
@@ -100,7 +91,6 @@
             font-size: 1.2rem;
             box-sizing: border-box;
         }
-
         .card-front {
             background: #16a3a8;
             color: white;
@@ -111,20 +101,16 @@
             font-family: 'Press Start 2P', cursive;
             border: 10px solid white;
         }
-
         .card-front.red {
             background: rgb(1, 1, 2);
         }
-
         .card-front.green {
             background: pink;
         }
-
         .card-front.yellow {
             background: peachpuff;
             color: #2c3e50;
         }
-
         .card-back {
             background: #f5f5dc;
             transform: rotateY(180deg);
@@ -133,7 +119,6 @@
             color: #2c3e50;
             line-height: 1.4;
         }
-
         .card-back strong {
             color: #e74c3c;
             font-size: 1.4rem;
@@ -143,7 +128,6 @@
             filter: blur(5px);
             pointer-events: none;
         }
-
         #focusCardModal {
             position: fixed;
             top: 0;
@@ -157,14 +141,12 @@
             z-index: 1000;
             display: none;
         }
-
         #focusCardModal .card-wrapper {
             width: 250px;
             height: 337.5px;
             margin-bottom: 2rem;
             box-shadow: 0 0.75rem 2.25rem rgba(0, 0, 0, 0.25);
         }
-
         #focusCardModal .card-flip {
             box-shadow: none;
         }
@@ -353,7 +335,7 @@
                 font-size: 0.9rem;
                 padding: 0.75rem;
             }
-            .calendar-day{
+             .calendar-day{
                 font-size: 0.6rem;
                 padding: 0.1rem;
                 min-height: 1.2rem;
@@ -384,7 +366,7 @@
         .shuffle-animation {
           animation: shuffle 0.5s ease-in-out;
         }
-        
+
         #menuIcon {
             position: fixed;
             top: 2rem;
@@ -669,6 +651,7 @@
         const calendarKey = 'calendarSavings';
         const goalKey = 'savingsGoal';
         const drawCountKey = 'drawCount';
+        const notificationKey = 'lastNotificationTime';
 
         function extractAmount(text) {
             const match = text.match(/₱(\d+)/);
@@ -810,6 +793,10 @@
             document.getElementById('goalAmount').innerText = savingsGoal;
             updateProgress();
             updateDrawCountDisplay();
+            //checkAndNotify(); // Removed initial call, now handled by interval
+
+            // Set up interval for daily notifications
+            setInterval(checkAndNotify, 60 * 60 * 1000); // Check every hour
         };
 
         // Calendar
@@ -840,12 +827,10 @@
                 dayCell.innerText = dayName;
                 calendarGrid.appendChild(dayCell);
             });
-
             for (let i = 0; i < firstDay; i++) {
                 const emptyCell = document.createElement('div');
                 calendarGrid.appendChild(emptyCell);
             }
-
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayCell = document.createElement('div');
@@ -856,7 +841,6 @@
                 } else {
                     dayCell.innerText = day;
                 }
-
                 if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                     dayCell.classList.add('today');
                 }
@@ -864,21 +848,15 @@
             }
         }
 
-        
         const menuIcon = document.getElementById('menuIcon');
         const sidebar = document.getElementById('sidebar');
         const sidebarClose = document.getElementById('sidebarClose');
-
         // Sidebar
         function toggleSidebar() {
             sidebar.classList.toggle('open');
         }
-
-    
         menuIcon.addEventListener('click', toggleSidebar);
-
         sidebarClose.addEventListener('click', toggleSidebar);
-
         // --- Progress Bar and Goal ---
         const goalAmountDisplay = document.getElementById('goalAmount');
         const progressBarFill = document.getElementById('progressBarFill');
@@ -889,17 +867,14 @@
         const drawCountDisplayElement = document.getElementById('drawCount');
         let currentGoal = parseInt(localStorage.getItem(goalKey) || '1000');
         goalAmountDisplay.textContent = currentGoal;
-
         function updateProgress() {
             const progress = (totalSaved / currentGoal) * 100;
             progressBarFill.style.width = `${progress}%`;
             progressText.textContent = `${progress.toFixed(1)}%`;
         }
-
         function updateDrawCountDisplay() {
             drawCountDisplayElement.textContent = drawCount;
         }
-
         function decrementDrawCount() {
             if (drawCount > 0) {
                 drawCount--;
@@ -913,7 +888,6 @@
             saveGoalBtn.classList.remove('hidden');
             editGoalBtn.classList.add('hidden');
         });
-
         saveGoalBtn.addEventListener('click', () => {
             const newGoal = parseInt(inputGoalElement.value);
             if (!isNaN(newGoal) && newGoal > 0) {
@@ -921,7 +895,6 @@
                 localStorage.setItem(goalKey, newGoal);
                 goalAmountDisplay.textContent = newGoal;
                 updateProgress();
-
                 inputGoalElement.classList.add('hidden');
                 saveGoalBtn.classList.add('hidden');
                 editGoalBtn.classList.remove('hidden');
@@ -930,6 +903,47 @@
             }
             inputGoalElement.value = '';
         });
+
+        function showNotification(message) {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        new Notification('Ipon Challenge', {
+                            body: message,
+                            icon: 'https://i.imgur.com/4B9G9vK.png' // Replace with your app's icon URL
+                        });
+                    }
+                });
+            }
+        }
+
+        function checkAndNotify() {
+            const now = new Date();
+            const hour = now.getHours();
+            const lastNotificationTime = localStorage.getItem(notificationKey);
+
+            // Check for 9 AM notification
+            if (hour === 9 && (!lastNotificationTime || !isSameDay(new Date(lastNotificationTime), now))) {
+                if (drawCount > 0) {
+                    showNotification("Good morning! Don't forget to draw your daily Ipon Challenge card!");
+                    localStorage.setItem(notificationKey, now.toISOString());
+                }
+            }
+
+            // Check for 4 PM notification
+            if (hour === 16 && (!lastNotificationTime || !isSameDay(new Date(lastNotificationTime), now) || (lastNotificationTime && new Date(lastNotificationTime).getHours() < 12)) ) {
+                if (drawCount > 0) {
+                    showNotification("It's 4 PM! Have you drawn your Ipon Challenge card yet?");
+                    localStorage.setItem(notificationKey, now.toISOString());
+                }
+            }
+        }
+
+        function isSameDay(date1, date2) {
+            return date1.getFullYear() === date2.getFullYear() &&
+                   date1.getMonth() === date2.getMonth() &&
+                   date1.getDate() === date2.getDate();
+        }
     </script>
 </body>
 </html>
